@@ -1,8 +1,18 @@
 import tweepy
 
 # TODO:
-# -Save access token to avoid excesive re-auth
 # -Set up stream listening on Trixie's glorious tweets
+class TrixTweetListener(tweepy.StreamListener):
+
+	def on_status(self, status):
+		print(status.text)
+	
+	def on_error(self, status_code):
+		if status_code == 420:
+			# Disconnect the stream
+			return False
+
+		# Otherwise reconnect with back-off
 
 def get_api():
 	credsfile = open("CREDENTIALS", "r")
@@ -16,3 +26,8 @@ def get_api():
 	return api
 
 api = get_api()
+trixTweetListener = TrixTweetListener()
+trixTweetStream = tweepy.Stream(auth = api.auth, listener=trixTweetListener)
+#trixTweetStream.filter(follow=["1064620395179925504"])
+# Using my (@nenmyx) ID for now
+trixTweetStream.filter(follow=["1102775856722780161"])
