@@ -1,11 +1,18 @@
 import tweepy
 
-# TODO:
-# -Set up stream listening on Trixie's glorious tweets
 class TrixTweetListener(tweepy.StreamListener):
 
+	def __init__(self, api):
+		self.api = api
+
 	def on_status(self, status):
-		print(status.text)
+		#print(status.text)
+		text = status.text
+		isFiltered = text.startswith("RT") or text.startswith("@") or text.startswith("https://t.co")
+		if isFiltered:
+			return
+		print("tweeting " + text.lower())
+		self.api.update_status(text.lower())
 	
 	def on_error(self, status_code):
 		if status_code == 420:
@@ -26,8 +33,6 @@ def get_api():
 	return api
 
 api = get_api()
-trixTweetListener = TrixTweetListener()
+trixTweetListener = TrixTweetListener(api)
 trixTweetStream = tweepy.Stream(auth = api.auth, listener=trixTweetListener)
-#trixTweetStream.filter(follow=["1064620395179925504"])
-# Using my (@nenmyx) ID for now
-trixTweetStream.filter(follow=["1102775856722780161"])
+trixTweetStream.filter(follow=["1064620395179925504"])
