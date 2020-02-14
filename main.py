@@ -1,5 +1,9 @@
 import tweepy
 
+# TODO:
+# -Save access token to avoid excesive re-auth
+# -Set up stream listening on Trixie's glorious tweets
+
 def get_api():
 	credsfile = open("CREDENTIALS", "r")
 	fullcreds = credsfile.read()
